@@ -39,7 +39,11 @@ check_frontend() {
     log "INFO" "Installing frontend dependencies (npm ci)..."
     npm ci
   fi
-  npm run lint
+  if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts && pkg.scripts.lint ? 0 : 1)" >/dev/null 2>&1; then
+    npm run lint
+  else
+    log "WARN" "npm script 'lint' not defined; skipping lint."
+  fi
   npm run build
   popd >/dev/null
 }
@@ -134,19 +138,26 @@ else
   done
 fi
 
-declare -A RUNNERS=(
-  [frontend]=check_frontend
-  [services]=check_services
-  [contracts]=check_contracts
-  [risk-model]=check_risk_model
-)
-
 for target in "${TARGETS[@]}"; do
-  if [[ -n "${RUNNERS[$target]:-}" ]]; then
-    run_step "$target" "${RUNNERS[$target]}"
-  else
-    log "WARN" "No runner defined for target '${target}'."
-  fi
+  case "$target" in
+    frontend)
+      runner=check_frontend
+      ;;
+    services)
+      runner=check_services
+      ;;
+    contracts)
+      runner=check_contracts
+      ;;
+    risk-model)
+      runner=check_risk_model
+      ;;
+    *)
+      log "WARN" "No runner defined for target '${target}'."
+      continue
+      ;;
+  esac
+  run_step "$target" "$runner"
 done
 
 if [[ ${#FAILURES[@]} -gt 0 ]]; then
