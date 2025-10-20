@@ -1,0 +1,50 @@
+# Example configuration for LeverageGuard microservices.
+services:
+  order_verification:
+    url: http://localhost:8001
+  payout_processing:
+    url: http://localhost:8002
+  fund_management:
+    url: http://localhost:8003
+  report_generation:
+    url: http://localhost:8004
+
+message_queue:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+
+database:
+  url: postgresql://postgres:postgres@localhost:5432/leverageguard
+
+web3:
+  provider_url: http://localhost:8545
+  network: base
+  confirmations_required: 2
+
+contract:
+  address: 0x0000000000000000000000000000000000000000
+  abi: []
+
+security:
+  max_leverage_ratio: 20
+  max_order_size: 1000000
+  min_collateral_ratio: 0.05
+
+payouts:
+  treasury_wallet: 0x0000000000000000000000000000000000000000
+  wallet_private_key: ""
+
+logging:
+  level: INFO
+  json: false
+
+notifications:
+  sendgrid_api_key: ""
+  default_sender: no-reply@example.com

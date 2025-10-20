@@ -1,0 +1,31 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+
+# Node / Frontend
+node_modules/
+dist/
+*.local
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.mypy_cache/
+.pytest_cache/
+
+# Env
+.env
+.env.*
+
+# Build artefacts
+coverage/
+reports/
+build/
+tmp/
+
+# Tooling
+.idea/
+.vscode/
+
